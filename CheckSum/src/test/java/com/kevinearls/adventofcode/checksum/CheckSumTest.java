@@ -18,19 +18,32 @@ import static org.junit.Assert.assertEquals;
 
 public class CheckSumTest {
 
+    /**
+     * For Day2 - part 2
+     * 5 9 2 8
+     9 4 7 3
+     3 8 6 5
+     In the first row, the only two numbers that evenly divide are 8 and 2; the result of this division is 4.
+     In the second row, the two numbers are 9 and 3; the result is 3.
+     In the third row, the result is 2.
+     In this example, the sum of the results would be 4 + 3 + 2 = 9.
+     *
+     *
+     */
     @Test
     public void testExampleInputs() {
         CheckSum checkSum = new CheckSum();
         Integer[][] testData = new Integer[][]{
-                { 5, 1, 9, 5 },
-                { 7, 5, 3 },
-                { 2, 4, 6, 8},
+                { 5, 9, 2, 8 },
+                { 9, 4, 7,3 },
+                { 3, 8, 6, 5},
         };
 
         Integer result = checkSum.checksum(testData);
         System.out.printf("Result " + result);
-        assertEquals(new Integer(18), result);
+        assertEquals(new Integer(9), result);
     }
+
 
     @Ignore
     @Test
@@ -76,6 +89,6 @@ public class CheckSumTest {
         CheckSum checkSum = new CheckSum();
         Integer result = checkSum.checksum(array);
         System.out.println(result);
-        assertEquals(new Integer(42378), result);
+        assertEquals(new Integer(246), result);
     }
 }
