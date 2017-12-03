@@ -21,6 +21,7 @@
     <modules>
         <module>InverseCaptcha</module>
         <module>CheckSum</module>
+	<module>Spiral</module>
     </modules>
 
     <dependencyManagement>
