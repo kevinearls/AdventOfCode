@@ -1,4 +1,4 @@
-package com.kevinearls.adventofcode.day1;
+package com.kevinearls.adventofcode.inversecaptcha;
 /**
  * The captcha requires you to review a sequence of digits (your puzzle input) and find the sum of all digits that match
  * the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
@@ -12,7 +12,7 @@ package com.kevinearls.adventofcode.day1;
  What is the solution to your captcha?
 
  */
-public class Day1 {
+public class InverseCaptcha {
     public int sum(String input) {
         // TODO check input?
 
@@ -36,7 +36,7 @@ public class Day1 {
     }
 
     public static void main(String[] args) {
-        Day1 day1 = new Day1();
+        InverseCaptcha day1 = new InverseCaptcha();
         System.out.println("1122: " + day1.sum("1122"));
     }
 
