@@ -73,7 +73,6 @@ public class PassPhraseTest {
         String line = br.readLine();
         while (line != null) {
             totalPhraseCount++;
-            //System.out.println("Testing: [" + line + "]");
             if (passPhrase.approve(line)) {
                 goodPhraseCount++;
             }

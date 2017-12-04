@@ -1,8 +1,6 @@
 package com.kevinearls.adventofcode.passphrase;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,12 +38,14 @@ public class PassPhrase {
     }
 
 
+    /**
+     * Return a set of all possible anagrams of the given string
+     * @param target
+     * @return
+     */
     protected Set<String> generateAnagrams(String target) {
         Set<String> anagrams = new HashSet<>();
 
-        // For each charager in target:
-        //  Create a new string with this charcter as the first letter
-        //  Remove it from the array, and call this recursivelly
         target = target.trim();
         if (target.length() == 1) {
             anagrams.add(target);
@@ -58,9 +58,7 @@ public class PassPhrase {
                     if (j != i) {
                         remainder += target.charAt(j);
                     }
-                    // CONTINUE here
                 }
-                //System.out.println("Calling generate on " + remainder);
                 Set<String> subAnagrams = generateAnagrams(remainder);
                 for (String sub : subAnagrams) {
                     anagrams.add(current + sub);
