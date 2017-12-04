@@ -22,6 +22,8 @@
     <modules>
         <module>InverseCaptcha</module>
         <module>CheckSum</module>
+        <module>Spiral</module>
+        <module>PassPhrase</module>
 	<module>Spiral</module>
     </modules>
 
