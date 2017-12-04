@@ -1,6 +1,8 @@
 package com.kevinearls.adventofcode.passphrase;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,12 +27,47 @@ public class PassPhrase {
         Set<String> words = new HashSet<>();
         String[] parts = passphrase.split("\\s+");
         for (String part : parts) {
-            if (words.contains(part)) {
-                return false;
-            } else {
-                words.add(part);
+            Set<String> anagrams = generateAnagrams(part);
+            for (String anagram : anagrams) {
+                if (words.contains(anagram)) {
+                    return false;
+                } else {
+                    words.add(anagram);
+                }
             }
         }
         return true;
+    }
+
+
+    protected Set<String> generateAnagrams(String target) {
+        Set<String> anagrams = new HashSet<>();
+
+        // For each charager in target:
+        //  Create a new string with this charcter as the first letter
+        //  Remove it from the array, and call this recursivelly
+        target = target.trim();
+        if (target.length() == 1) {
+            anagrams.add(target);
+            return anagrams;
+        } else {
+            for (int i=0; i < target.length(); i++) {
+                char current = target.charAt(i);
+                String remainder = new String();
+                for (int j=0; j< target.length(); j++) {
+                    if (j != i) {
+                        remainder += target.charAt(j);
+                    }
+                    // CONTINUE here
+                }
+                //System.out.println("Calling generate on " + remainder);
+                Set<String> subAnagrams = generateAnagrams(remainder);
+                for (String sub : subAnagrams) {
+                    anagrams.add(current + sub);
+                }
+            }
+        }
+
+        return anagrams;
     }
 }

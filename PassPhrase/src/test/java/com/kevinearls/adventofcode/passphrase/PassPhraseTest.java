@@ -1,14 +1,13 @@
 package com.kevinearls.adventofcode.passphrase;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +26,20 @@ import static org.junit.Assert.*;
  aa bb cc dd aaa is valid - aa and aaa count as different words.
  The system's full passphrase list is available as your puzzle input. How many passphrases are valid?
 
+ --- Part Two ---
+
+ For added security, yet another system policy has been put in place. Now, a valid passphrase must contain no two words that are anagrams of each other - that is, a passphrase is invalid if any word's letters can be rearranged to form any other word in the passphrase.
+
+ For example:
+
+ abcde fghij is a valid passphrase.
+ abcde xyz ecdab is not valid - the letters from the third word can be rearranged to form the first word.
+ a ab abc abd abf abj is a valid passphrase, because all letters need to be used when forming another word.
+ iiii oiii ooii oooi oooo is valid.
+ oiii ioii iioi iiio is not valid - any of these words can be rearranged to form any other word.
+ Under this new system policy, how many passphrases are valid?
+
+ Although it hasn't changed, you can still get your puzzle input.
 
  */
 public class PassPhraseTest {
@@ -34,9 +47,18 @@ public class PassPhraseTest {
 
     @Test
     public void testExamplePassPhrases() {
-        assertTrue("aa bb cc dd ee should be valid", passPhrase.approve("aa bb cc dd ee"));
-        assertFalse("aa bb cc dd aa should NOT be valid", passPhrase.approve("aa bb cc dd aa"));
-        assertTrue("aa bb cc dd aaa should be valid", passPhrase.approve("aa bb cc dd aaa"));
+        /*
+        abcde fghij is a valid passphrase.
+ abcde xyz ecdab is not valid - the letters from the third word can be rearranged to form the first word.
+ a ab abc abd abf abj is a valid passphrase, because all letters need to be used when forming another word.
+ iiii oiii ooii oooi oooo is valid.
+ oiii ioii iioi iiio is not valid -
+         */
+        assertTrue("abcde fghij should be valid", passPhrase.approve("abcde fghij"));
+        assertFalse("abcde xyz ecdab should NOT be valid", passPhrase.approve("abcde xyz ecdab"));
+        assertTrue("a ab abc abd abf abj should be valid", passPhrase.approve("a ab abc abd abf abj"));
+        assertTrue("iiii oiii ooii oooi oooo should be valid", passPhrase.approve("iiii oiii ooii oooi oooo"));
+        assertFalse("oiii ioii iioi iiio should NOT be valid", passPhrase.approve("oiii ioii iioi iiio"));
     }
 
 
@@ -59,6 +81,18 @@ public class PassPhraseTest {
         }
 
         System.out.println("Got " + goodPhraseCount + " good pass phrases out of " + totalPhraseCount);
-        assertEquals(386, goodPhraseCount);
+        assertEquals(208, goodPhraseCount);
+    }
+
+    @Ignore
+    @Test
+    public void eraseMe() {
+        Set<String> anagrams = passPhrase.generateAnagrams("abcde");
+        System.out.println("GOT " + anagrams.size());
+        List<String> blah = new ArrayList<>(anagrams);
+        Collections.sort(blah);
+        for (String anagram : blah) {
+            System.out.println(anagram);
+        }
     }
 }
