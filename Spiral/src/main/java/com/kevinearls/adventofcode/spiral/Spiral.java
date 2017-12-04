@@ -1,126 +1,117 @@
 package com.kevinearls.adventofcode.spiral;
 
 
+import java.util.logging.Logger;
+
 import static com.kevinearls.adventofcode.spiral.Direction.*;
 
 /**
- * ou come across an experimental new kind of memory stored on an infinite two-dimensional grid.
+ --- Part Two ---
 
- Each square on the grid is allocated in a spiral pattern starting at a location marked 1 and then counting up while
- spiraling outward. For example, the first few squares are allocated like this:
+ As a stress test on the system, the programs here clear the grid and then store the value 1 in square 1. Then, in the same allocation order as shown above, they store the sum of the values in all adjacent squares, including diagonals.
 
- 17  16  15  14  13
- 18   5   4   3  12
- 19   6   1   2  11
- 20   7   8   9  10
- 21  22  23---> ...
- While this is very space-efficient (no squares are skipped), requested data must be carried back to square 1 (the
- location of the only access port for this memory system) by programs that can only move up, down, left, or right.
- They always take the shortest path: the Manhattan Distance between the location of the data and square 1.
+ So, the first few squares' values are chosen as follows:
 
- For example:
+ Square 1 starts with the value 1.
+ Square 2 has only one adjacent filled square (with value 1), so it also stores 1.
+ Square 3 has both of the above squares as neighbors and stores the sum of their values, 2.
+ Square 4 has all three of the aforementioned squares as neighbors and stores the sum of their values, 4.
+ Square 5 only has the first and fourth squares as neighbors, so it gets the value 5.
+ Once a square is written, its value does not change. Therefore, the first few squares would receive the following values:
 
- Data from square 1 is carried 0 steps, since it's at the access port.
- Data from square 12 is carried 3 steps, such as: down, left, left.
- Data from square 23 is carried only 2 steps: up twice.
- Data from square 1024 must be carried 31 steps.
- How many steps are required to carry the data from the square identified in your puzzle input all the way to the access port?
+ 147  142  133  122   59
+ 304    5    4    2   57
+ 330   10    1    1   54
+ 351   11   23   25   26
+ 362  747  806--->   ...
+ What is the first value written that is larger than your puzzle input?
 
- Your puzzle input is 368078.
+ Your puzzle input is still 368078.
  */
 public class Spiral {
-    public Integer calculateSteps(Integer targetValue) {
-        int gridSize = calculateGridSize(targetValue);
-        int[][] grid = createGrid(gridSize);
-
-        int foundRow=-1, foundColumn=-1;
-        for (int row = 0; row < gridSize; row++) {
-            for (int column = 0; column < gridSize; column++) {
-                if (grid[row][column] == targetValue) {
-                    foundRow = row;
-                    foundColumn = column;
-                    break;
-                }
-            }
-        }
-        // TODO add logging and use logger.debug
-        //System.out.println("Found target at row " + foundRow + " column " + foundColumn);
-        int middle = gridSize / 2;
-        int rowDiff = Math.abs(foundColumn - middle);
-        int columnDiff = Math.abs(foundRow - middle);
-        return rowDiff + columnDiff;
-    }
-
+    private static final Logger logger = Logger.getLogger(Spiral.class.getName());
 
     /**
-     * TODO check input, should be an odd number > 0
-     * @param target
-     * @return
+     * NOTE: size must be odd and >0 to model a spiral!
+     *
+     * TODO Explain this!!!!
+     * @param target We want the first value bigger than this
+     * @return first value found > target
      */
-    protected int calculateGridSize(int target) {
-        int size = 1;
-        int square = size * size;
-        while(target > square) {
-            size += 2;
-            square = size * size;
-        }
+    protected int findTargetWhileCreatingGrid(int target) {
+        // Brute force, keep building grids till we find one big enough to hold the target
+        int size = 3;
+        while (true) {
+            int[][] grid = new int[size][size];
+            int row = size / 2;
+            int column = size / 2;
+            int numberOfEntriesInGrid = size * size;
 
-        return size;
+            // Set the start value to 1
+            grid[row][column] = 1;
+            Direction currentDirection = RIGHT;
+            int entriesFiled = 1;
+            int valueAdded = -1;
+
+            while (entriesFiled < numberOfEntriesInGrid) {
+                switch (currentDirection) {
+                    case UP:
+                        row--;
+                        valueAdded = sumOfNeighbors(grid, row, column);
+                        grid[row][column] = valueAdded;
+                        if (row == 0 || grid[row][column - 1] == 0) {
+                            currentDirection = LEFT;  // if we're at the top, or the cell to the left is empty, move left
+                        }
+                        break;
+                    case DOWN:
+                        row++;
+                        valueAdded = sumOfNeighbors(grid, row, column);
+                        grid[row][column] = valueAdded;
+                        if (row == (size - 1) || grid[row][column + 1] == 0) {
+                            currentDirection = RIGHT;  // if we're at the bottom, or the column to the right is empty, move right
+                        }
+                        break;
+                    case RIGHT:
+                        column++;
+                        valueAdded = sumOfNeighbors(grid, row, column);
+                        grid[row][column] = valueAdded;
+                        if (column == (size - 1) || grid[row - 1][column] == 0) {
+                            currentDirection = UP; // If we're at the right margin, or the cell above is empty, change direction move up
+                        }
+                        break;
+                    case LEFT:
+                        column--;
+                        valueAdded = sumOfNeighbors(grid, row, column);
+                        grid[row][column] = valueAdded;
+                        if (column == 0 || grid[row + 1][column] == 0) {
+                            currentDirection = DOWN;  // If we're at the left margin, or the cell below is empty change to DOWN
+                        }
+                        break;
+                }
+                entriesFiled++;
+
+                if (valueAdded > target) {
+                    return valueAdded;
+                }
+
+            }
+            size += 2;
+        }
     }
 
-    protected int[][] createGrid(int size) {
-        int[][] grid = new int[size][size];
-        // Set the start location and max value
-        int row = size / 2;
-        int column = size / 2;
-        int maxValue = size * size;
+    protected int sumOfNeighbors(int[][] grid, int row, int column) {
+        logger.fine("SUM called on " + row + "," + column);
+        int rowStart = Math.max(row-1, 0);
+        int rowEnd = Math.min(row+1, grid.length-1);
+        int columnStart = Math.max(column-1, 0);
+        int columnEnd = Math.min(column+1, grid.length-1);
 
-        // Set the start value to 1
-        grid[row][column] = 1;
-        int nextValue = 2;
-        Direction currentDirection = RIGHT;
-
-        while (nextValue <= maxValue) {
-            switch (currentDirection) {
-                case UP:
-                    row--;
-                    grid[row][column] = nextValue;
-                    //System.out.println("Moved UP set " + row + ", " + column + " to " + nextValue);
-                    // if we're at the top, or the cell to the left is empty, move left
-                    if (row == 0 || grid[row][column - 1] == 0) {
-                        currentDirection = LEFT;
-                    }
-                    break;
-                case DOWN:
-                    row++;
-                    grid[row][column] = nextValue;
-                    //System.out.println("Moved DOWN set " + row + ", " + column + " to " + nextValue);
-                    // if we're at the bottom, or the column to the right is empty, move right
-                    if (row == (size - 1) || grid[row][column + 1] == 0) {
-                        currentDirection = RIGHT;
-                    }
-                    break;
-                case RIGHT:
-                    column++;
-                    grid[row][column] = nextValue;
-                    //System.out.println("Moved RIGHT set " + row + ", " + column + " to " + nextValue);
-                    // If we're at the right margin, or the cell above is empty, change direction move up
-                    if (column == (size - 1) || grid[row - 1][column] == 0) {
-                        currentDirection = UP;
-                    }
-                    break;
-                case LEFT:
-                    column--;
-                    grid[row][column] = nextValue;
-                    //System.out.println("Moved LEFT set " + row + ", " + column + " to " + nextValue);
-                    // If we're at the left margin, or the cell below is empty change to DOWN
-                    if (column == 0 || grid[row + 1][column] == 0) {
-                        currentDirection = DOWN;
-                    }
-                    break;
+        int total = 0;
+        for (int r = rowStart; r <= rowEnd; r++) {
+            for (int c = columnStart; c <= columnEnd; c++) {
+                total += grid[r][c];
             }
-            nextValue++;
         }
-        return grid;
+        return total;
     }
 }
