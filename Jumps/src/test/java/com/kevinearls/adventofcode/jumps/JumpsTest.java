@@ -42,6 +42,15 @@ import static org.junit.Assert.assertEquals;
 
  How many steps does it take to reach the exit?
 
+
+ --- Part Two ---
+
+ Now, the jumps are even stranger: after each jump, if the offset was three or more, instead decrease it by 1. Otherwise, increase it by 1 as before.
+
+ Using this rule with the above example, the process now takes 10 steps, and the offset values after finding the exit are left as 2 3 2 3 -1.
+
+ How many steps does it now take to reach the exit?
+
  */
 public class JumpsTest {
     Jumps jumps = new Jumps();
@@ -49,7 +58,7 @@ public class JumpsTest {
     public void testExampleData() {
         int[] example = {0, 3, 0, 1, -3};
         int result = jumps.caculateJumps(example);
-        assertEquals(5, result);
+        assertEquals(10, result);
     }
 
     @Test
@@ -65,7 +74,7 @@ public class JumpsTest {
 
         int result = jumps.caculateJumps(data);
         System.out.printf("Took " + result + " jumps");
-        assertEquals(326618, result);
+        assertEquals(21841249, result);
 
     }
 
