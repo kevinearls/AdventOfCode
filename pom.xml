@@ -24,6 +24,7 @@
         <module>CheckSum</module>
         <module>Spiral</module>
         <module>PassPhrase</module>
+	<module>Jumps</module>
     </modules>
 
     <dependencyManagement>
