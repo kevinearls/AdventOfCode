@@ -37,8 +37,20 @@ import java.util.List;
  Given the initial block counts in your puzzle input, how many redistribution cycles must be completed before a configuration
  is produced that has been seen before?
 
+ --- Part Two ---
+
+ Out of curiosity, the debugger would also like to know the size of the loop: starting from a state that has already been
+ seen, how many block redistribution cycles must be performed before that same state is seen again?
+
+ In the example above, 2 4 1 2 is seen again after four cycles, and so the answer in that example would be 4.
+
+ How many cycles are in the infinite loop that arises from the configuration in your puzzle input?
+
+
+
  */
 public class Memory {
+    private boolean foundOnce = false;
     public int calculateCycles(Integer[] memoryBank) {
         boolean notAlreadySeen = true;
 
@@ -56,6 +68,16 @@ public class Memory {
                 updated = redistribute(updated);
             }
         }
+
+        /// HACK for solving part2.  Once we find the configuration that terminates the loop above,
+        // call this method recursively to see how long it takes to find it again,
+        if (!foundOnce) {
+            foundOnce = true;
+            int subIterations = calculateCycles(updated);
+            System.out.println("Part2:  " + subIterations);
+        }
+
+
 
         return iterations;
     }
