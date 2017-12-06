@@ -25,6 +25,7 @@
         <module>Spiral</module>
         <module>PassPhrase</module>
 	<module>Jumps</module>
+	<module>Memory</module>
     </modules>
 
     <dependencyManagement>
