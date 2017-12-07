@@ -26,6 +26,7 @@
         <module>PassPhrase</module>
 	<module>Jumps</module>
 	<module>Memory</module>
+	<module>Tower</module>
     </modules>
 
     <dependencyManagement>
