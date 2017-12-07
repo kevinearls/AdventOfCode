@@ -43,4 +43,37 @@ public class Tower {
         node.setAChild(true);
         tower.put(nodeName, node);  //
     }
+
+    public List<Node> getChildrenOf(String nodeName) {
+        List<Node> children = new ArrayList<>();
+        Node parent = tower.get(nodeName);
+        for (String childName : parent.getChildren()) {
+            Node child = tower.get(childName);
+            children.add(child);
+        }
+
+        return children;
+    }
+
+    public Node getNodeByName(String nodeName) {
+        Node target = tower.get(nodeName);
+        return target;
+    }
+
+    public Integer getTowerWeight(String startNodeName) {
+        Integer weight = 0;
+        Node startNode = tower.get(startNodeName);
+        if (startNode.getChildren().size() == 0) {
+            return startNode.getWeight();
+        }
+
+        for (String childName : startNode.getChildren()) {
+            Integer towerWeight = getTowerWeight(childName);
+            //System.out.println("Weight of " + childName + " is " + towerWeight);
+            weight += towerWeight;
+        }
+        weight += startNode.getWeight();
+
+        return weight;
+    }
 }

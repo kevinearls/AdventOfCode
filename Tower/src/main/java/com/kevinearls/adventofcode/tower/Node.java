@@ -9,6 +9,30 @@ public class Node {
     private List<String> children;
     private boolean isAChild;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public void setChildren(List<String> children) {
+        this.children = children;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public List<String> getChildren() {
+        return children;
+    }
+
     public Node(String name, Integer weight, List<String> children) {
         this.name = name;
         this.weight = weight;

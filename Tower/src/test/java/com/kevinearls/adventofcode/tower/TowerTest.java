@@ -7,9 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,7 +48,7 @@ public class TowerTest {
         exampleData.add("havc (66)");
         exampleData.add("ktlj (57)");
         exampleData.add("fwft (72) -> ktlj, cntj, xhth");
-        exampleData.add("qoyq (66");
+        exampleData.add("qoyq (66)");
         exampleData.add("padx (45) -> pbga, havc, qoyq");
         exampleData.add("tknk (41) -> ugml, padx, fwft");
         exampleData.add("jptl (61)");
@@ -60,12 +58,15 @@ public class TowerTest {
 
         for (String example : exampleData) {
             InputLine line = new InputLine(example);
-
             tower.addToTower(line.getName(), line.getWeight(), line.childNames);
         }
 
         System.out.println("ROOT: " + tower.findRootNodeName());
         assertEquals("tknk", tower.findRootNodeName());
+
+        System.out.println("---------- Part 2---------------");
+        int result = balance(tower.getNodeByName(tower.findRootNodeName()), 0);
+        assertEquals(60, result);
     }
 
 
@@ -77,27 +78,70 @@ public class TowerTest {
             tower.addToTower(line.getName(), line.getWeight(), line.childNames);
         }
 
-        System.out.println("ROOT: " + tower.findRootNodeName());
         assertEquals("cyrupz", tower.findRootNodeName());
 
+        // "cwwwj" needs to be balanced and set to 193 instead of 210
+        Integer result = balance(tower.getNodeByName(tower.findRootNodeName()), 0);
+        System.out.println("RESULT " + result);
+        assertEquals(new Integer(193), result);
+    }
+
+    /**
+     * FIXME this should really be in the Tower class, not here in the test.
+     * @param startNode
+     * @param correction
+     * @return
+     */
+    protected int balance(Node startNode, Integer correction) {
+        //System.out.println("Balance called with " + startNode.getName() + " correction " + correction);
+        List<Node> children = tower.getChildrenOf(startNode.getName());
+        boolean balanced = false;
+        Map<Integer, Integer> occurences = new HashMap<>();
+        Map<String, Integer> towerWeights = new HashMap<>();
+
+        // First, see if towers are unbalanced
+        for (Node child : children) {
+            Integer towerWeight = tower.getTowerWeight(child.getName());
+            if (occurences.containsKey(towerWeight)) {
+                occurences.put(towerWeight, occurences.get(towerWeight) + 1);
+            } else {
+                occurences.put(towerWeight, new Integer(1));
+            }
+            towerWeights.put(child.getName(), towerWeight); // TODO use Node as key instead?
+        }
+
+        Integer unbalancedValue=0;
+        Integer toCorrectBy = 0;
+        if (occurences.size() == 1) {  // Children are balanced, correct this node and return, we're done
+            System.out.println("Fix node " + startNode.getName() + " by " + correction +" from current weight " + startNode.getWeight());
+            return startNode.getWeight() + correction;
+        } else {
+            // Figure out which node we need to balance, and by how much
+            Integer correctValue=0;
+
+            for (Integer weight : occurences.keySet()) {  // TODO assert size is 2
+                Integer count = occurences.get(weight);
+                if (count == 1) {
+                    unbalancedValue = weight;
+                } else {
+                    correctValue = weight;
+                }
+            }
+            toCorrectBy = correctValue - unbalancedValue;
+            for (String nodeName : towerWeights.keySet()) {
+                Integer weight = towerWeights.get(nodeName);
+                if (weight == unbalancedValue) {
+                    return balance(tower.getNodeByName(nodeName), toCorrectBy);    // FIXME use Node in Map instead of name?
+                }
+            }
+            System.out.println("---- shouldn't ever get here?");
+        }
+        return 0;
     }
 
 
     @Test
     public void testInputLine() {
-        /*List<String> examples = new ArrayList<>();
-        examples.add("pbga (66)");
-        examples.add("fwft (72) -> ktlj, cntj, xhth");
-        examples.add("tknk (41) -> ugml, padx, fwft");
-        examples.add("cntj (57)");
-
-        for (String example : examples) {
-            System.out.println("----------------------------------------------------------------");
-            System.out.println("Testing: " + example);
-            InputLine inputLine = new InputLine(example);
-            System.out.println(inputLine.getName() + " " + inputLine.getWeight() + " " + inputLine.getChildNames());
-        } */
-
         InputLine line1 = new InputLine("pbga (66)");
         assertEquals("pbga", line1.getName());
         assertEquals(new Integer(66), line1.getWeight());
