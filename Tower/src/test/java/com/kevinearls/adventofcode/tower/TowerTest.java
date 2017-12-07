@@ -60,12 +60,8 @@ public class TowerTest {
 
         for (String example : exampleData) {
             InputLine line = new InputLine(example);
-            // 1. Add the node name to the tower (if it's not already been seen)
-            // 2. for all children, add to tower and/or mark as seen
-            tower.addToTower(line.getName());
-            for (String childName : line.getChildNames()) {
-                tower.markAsChild(childName);
-            }
+
+            tower.addToTower(line.getName(), line.getWeight(), line.childNames);
         }
 
         System.out.println("ROOT: " + tower.findRootNodeName());
@@ -78,12 +74,7 @@ public class TowerTest {
         List<String> testData = loadFromFIle("input.txt");
         for (String example : testData) {
             InputLine line = new InputLine(example);
-            // 1. Add the node name to the tower (if it's not already been seen)
-            // 2. for all children, add to tower and/or mark as seen
-            tower.addToTower(line.getName());
-            for (String childName : line.getChildNames()) {
-                tower.markAsChild(childName);
-            }
+            tower.addToTower(line.getName(), line.getWeight(), line.childNames);
         }
 
         System.out.println("ROOT: " + tower.findRootNodeName());
