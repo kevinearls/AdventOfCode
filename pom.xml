@@ -27,6 +27,7 @@
 	<module>Jumps</module>
 	<module>Memory</module>
 	<module>Tower</module>
+	<module>CPU</module>
     </modules>
 
     <dependencyManagement>
