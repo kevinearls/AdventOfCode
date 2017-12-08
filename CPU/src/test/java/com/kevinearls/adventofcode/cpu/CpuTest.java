@@ -44,6 +44,13 @@ public class CpuTest {
      bandwidth to tell you what all the registers are named, and leaves that to you to determine.
 
      What is the largest value in any register after completing the instructions in your puzzle input?
+
+     PART 2
+
+     To be safe, the CPU also needs to know the highest value held in any register during this process so that it can decide
+     how much memory to allocate to these operations. For example, in the above instructions, the highest value ever held was
+     10 (in register c after the third instruction was evaluated).
+
      */
     @Test
     public void testExampleData() {
@@ -66,8 +73,12 @@ public class CpuTest {
         }
 
         Integer result = cpu.findGreatestRegisterValue();
-        System.out.println("RESULT " + result);
+        System.out.println("Greatest registerValue  " + result);
         assertEquals(new Integer(1), result);
+
+        Integer highestValueHeld = cpu.getHighestValueHeld();
+        System.out.println("Highest Value Held " + highestValueHeld);
+        assertEquals(new Integer(10), highestValueHeld);
     }
 
 
@@ -89,6 +100,10 @@ public class CpuTest {
         Integer result = cpu.findGreatestRegisterValue();
         System.out.println("REAL RESULT " + result);
         assertEquals(new Integer(4416), result);
+
+        Integer highestValueHeld = cpu.getHighestValueHeld();
+        System.out.println("Highest Value Held " + highestValueHeld);
+        assertEquals(new Integer(5199), highestValueHeld);
     }
 
     private List<String> loadFromFile(String filename) throws Exception {

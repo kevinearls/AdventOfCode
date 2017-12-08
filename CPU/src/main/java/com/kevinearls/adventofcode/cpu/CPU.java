@@ -5,12 +5,16 @@ import java.util.Map;
 
 public class CPU {
     private Map<String, Integer> registers = new HashMap<>();
+    private Integer highestValueHeld = Integer.MIN_VALUE;
 
     public Integer getRegisterValue(String registerName) {
         return registers.get(registerName);
     }
 
     public void setRegister(String registerName, Integer value) {
+        if (value > highestValueHeld) {
+            highestValueHeld = value;
+        }
         registers.put(registerName, value);
     }
 
@@ -23,5 +27,9 @@ public class CPU {
             }
         }
         return greatest;
+    }
+
+    public Integer getHighestValueHeld() {
+        return highestValueHeld;
     }
 }
