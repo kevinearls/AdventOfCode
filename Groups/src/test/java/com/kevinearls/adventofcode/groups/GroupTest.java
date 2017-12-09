@@ -19,7 +19,7 @@ public class GroupTest {
     public void setup() {
         groups = new Groups();
     }
-    
+
 
     /**
      * {}, score of 1.
@@ -37,10 +37,45 @@ public class GroupTest {
         assertEquals(6, groups.groupScore("{{{}}}"));
         assertEquals(5, groups.groupScore("{{},{}}"));
         assertEquals(16, groups.groupScore("{{{},{},{{}}}}"));
-        //assertEquals(1, groups.groupScore("{<{},{},{{}}>}"));
+        assertEquals(1, groups.groupScore("{<{},{},{{}}>}"));
         assertEquals(1, groups.groupScore("{<a>,<a>,<a>,<a>}"));
         assertEquals(9, groups.groupScore("{{<!!>},{<!!>},{<!!>},{<!!>}}"));
         assertEquals(3, groups.groupScore("{{<a!>},{<a!>},{<a!>},{<ab>}}"));
+    }
+
+    /**
+     * Now, you're ready to remove the garbage.
+
+     To prove you've removed it, you need to count all of the characters within the garbage. The leading and trailing
+     < and > don't count, nor do any canceled characters or the ! doing the canceling.
+
+     <>, 0 characters.
+     <random characters>, 17 characters.
+     <<<<>, 3 characters.
+     <{!>}>, 2 characters.
+     <!!>, 0 characters.
+     <!!!>>, 0 characters.
+     <{o"i!a,<{i<a>, 10 characters.
+     How many non-canceled characters are within the garbage in your puzzle input?
+     */
+    @Test
+    public void testRemoveGarbageFromExampleData() {
+        assertEquals(0, groups.countGarbageCharacters("<>"));
+        assertEquals(17, groups.countGarbageCharacters("<random characters>"));
+        assertEquals(3, groups.countGarbageCharacters("<<<<>"));
+        assertEquals(2, groups.countGarbageCharacters("<{!>}>"));
+        assertEquals(0, groups.countGarbageCharacters("<!!>"));
+        assertEquals(0, groups.countGarbageCharacters("<!!!>>"));
+        assertEquals(10, groups.countGarbageCharacters("<{o\"i!a,<{i<a>"));
+    }
+
+    @Test
+    public void testPart2ReadData() throws Exception {
+        List<String> data = loadFromFile("input.txt");
+        String line = data.get(0);
+        Integer result = groups.countGarbageCharacters(line);
+        System.out.println("Removed : " + result + " garbage characters");
+        assertEquals(new Integer(7685), result);
     }
 
     @Test
