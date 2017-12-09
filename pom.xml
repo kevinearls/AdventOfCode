@@ -28,6 +28,7 @@
 	<module>Memory</module>
 	<module>Tower</module>
 	<module>CPU</module>
+	<module>Groups</module>
     </modules>
 
     <dependencyManagement>
