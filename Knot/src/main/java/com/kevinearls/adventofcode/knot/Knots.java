@@ -1,6 +1,8 @@
 package com.kevinearls.adventofcode.knot;
 
 
+import org.junit.Test;
+
 /**
  * To achieve this, begin with a list of numbers from 0 to 255, a current position which begins at 0 (the first element
  * in the list), a skip size (which starts at 0), and a sequence of lengths (your puzzle input). Then, for each length:
@@ -28,59 +30,126 @@ public class Knots {
      The fourth length, 5, selects every element starting with the second: 4) ([3] 0 1 2. Reversing this sublist (3 0 1 2 4 into 4 2 1 0 3) produces: 3) ([4] 2 1 0.
      Finally, the current position moves forward by 8: 3 4 2 1 [0]. The skip size increases to 4.
 
-     * @param list
-     * @param inputLengths
-     * @return
+
      */
-    public int computeHash(int[] list, int[] inputLengths) {
+
+
+    public String computePart2Hash(int[] list, String lengthsString) {
         int currentPosition = 0;
         int skipSize = 0;
+        final int maxRounds = 64;
+        int[] lengths = computeLengths(lengthsString);
 
-        for (int i=0; i < inputLengths.length; i++) {
-            int blah = inputLengths[i];
-            // 1 REVERSE the order of blah elements, starting at current position
-            int toBeReversed[] = new int[blah];
-            int j = 0;
-            int k = currentPosition;
-            while (j < blah) {
-                toBeReversed[j] = list[k];
-                k++;
-                j++;
-                if (k >= list.length) {
-                    k=0;
+        for (int round = 0; round < maxRounds; round++) {
+            for (int i = 0; i < lengths.length; i++) {
+                int blah = lengths[i];
+                // 1 REVERSE the order of blah elements, starting at current position
+                int toBeReversed[] = new int[blah];
+                int j = 0;
+                int k = currentPosition;
+                while (j < blah) {
+                    toBeReversed[j] = list[k];
+                    k++;
+                    j++;
+                    if (k >= list.length) {
+                        k = 0;
+                    }
                 }
-            }
 
-            // Put the reversed elements back in the original list
-            int[] reversed = reverse(toBeReversed);
-            j = 0;
-            k = currentPosition;
-            while (j < blah) {
-                list[k] = reversed[j];
-                j++;
-                k++;
-                if (k >= list.length) {
-                    k=0;
+                // Put the reversed elements back in the original list
+                int[] reversed = reverse(toBeReversed);
+                j = 0;
+                k = currentPosition;
+                while (j < blah) {
+                    list[k] = reversed[j];
+                    j++;
+                    k++;
+                    if (k >= list.length) {
+                        k = 0;
+                    }
                 }
+
+                // Move current position by blah + skipSize;
+                currentPosition = (currentPosition + blah + skipSize) % list.length;
+
+                // increase skip size by 1
+                skipSize++;
             }
-
-            // Move current position by blah + skipSize;
-            currentPosition = (currentPosition + blah + skipSize) % list.length;
-
-            // increase skip size by 1
-            skipSize++;
         }
 
-        // result = product of first 2 entries
-        int result = list[0] * list[1];
+        // Now we should have the sparse hash
+        int[] denseHash = computeDenseHash(list);
+
+        String result = convertToHex(denseHash);
+
         return result;
     }
 
-    public int[] convertToAscii(int[] input) {
-        int[] result = new int[input.length];
+
+    public int[] computeDenseHash(int[] sparseHash) {
+        int[] denseHash = new int[16];
+        if (sparseHash.length != 256) {
+            throw new RuntimeException("Wrong sparse hash size " + sparseHash.length + " it must be 256");
+        }
+
+        int position = 0;
+        for (int i=0; i < denseHash.length; i++) {
+            int total = 0;
+            for (int j = 0; j < 16; j++) {
+                total = total ^ sparseHash[position];
+                position++;
+            }
+
+            denseHash[i] = total;
+        }
+
+        return denseHash;
+    }
+
+
+    public int[] computeLengths(String input) {
+        // 17, 31, 73, 47, 23
+        int[] lengthsToApend = {17, 31, 73, 47, 23};
+        int[] convertedInput = convertToAscii(input);
+        int[] result = new int[convertedInput.length + lengthsToApend.length];
+
+        for (int i=0; i < convertedInput.length; i++) {
+            result[i] = convertedInput[i];
+        }
+        for (int i = convertedInput.length; i < (convertedInput.length + lengthsToApend.length); i++) {
+            result[i] = lengthsToApend[i - convertedInput.length];
+        }
+
+        return result;
+
+    }
+
+    public int[] convertToAscii(String input) {
+        char[] blah = input.toCharArray();
+
+        int[] result = new int[blah.length];
         char zero = '0';
+        for (int i=0; i < blah.length; i++) {
+            result[i] = blah[i];
+        }
+
+        return result;
+    }
+
+    public String convertToHex(int[] input) {
+        String result = "";
         for (int i=0; i < input.length; i++) {
-            result[i] = input[i] + (int) zero;
+            String thisOne = convertToHex(input[i]);
+            result += thisOne;
+        }
+
+        return result;
+    }
+
+    public String convertToHex(int input) {
+        String result = Integer.toHexString(input);
+        if (result.length() ==1) {
+            result = "0" + result;
         }
 
         return result;
@@ -104,4 +173,6 @@ public class Knots {
         }
         System.out.println("");
     }
+
+
 }
