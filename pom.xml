@@ -29,6 +29,7 @@
 	<module>Tower</module>
 	<module>CPU</module>
 	<module>Groups</module>
+	<module>Knot</module>
     </modules>
 
     <dependencyManagement>
