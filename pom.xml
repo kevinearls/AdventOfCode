@@ -30,6 +30,7 @@
 	<module>CPU</module>
 	<module>Groups</module>
 	<module>Knot</module>
+	<module>HexGrid</module>
     </modules>
 
     <dependencyManagement>
