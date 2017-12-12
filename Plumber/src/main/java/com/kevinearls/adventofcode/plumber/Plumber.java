@@ -3,40 +3,29 @@ package com.kevinearls.adventofcode.plumber;
 import java.util.*;
 
 public class Plumber {
-
     public Integer groupSize(List<String> input) {
         Map<Integer, List<Integer>> network = createInputMap(input);
         Set<Integer> reachable = computeReachableFrom(0, network);
         return reachable.size();
     }
 
-
     public Integer numberOfGroups(List<String> input) {
         Map<Integer, List<Integer>> network = createInputMap(input);
-        //System.out.println("At start network has " + network.keySet().size() + " entries") ;
-
         Integer numberOfGroups = 0;
         boolean done = false;
         while (!done) {
             Integer root = network.keySet().iterator().next();
             Set<Integer> reachable = computeReachableFrom(root, network);
-            //System.out.println("For " + root + " got a group of size " + reachable.size());
-
             numberOfGroups++;
             for (Integer key : reachable) {
                 network.remove(key);
             }
-            //System.out.println("After removal network has " + network.keySet().size() + " entries"); // TODO check for 0 here?
             if (network.keySet().size() == 0) {
                 done = true;
             }
-
         }
 
-
-        //Set<Integer> reachable = computeReachableFrom(0, network);
         return numberOfGroups;
-
     }
 
     public Set<Integer> computeReachableFrom(Integer root, Map<Integer, List<Integer>> network) {
@@ -48,10 +37,8 @@ public class Plumber {
 
         while (!done) {
             List<Integer> neighbors = network.get(current);
-            boolean addedNewReachable = false;
             for (Integer neigbor : neighbors) {
                 if (!reachable.contains(neigbor)) {
-                    addedNewReachable = true;
                     reachable.add(neigbor);
                     blah.add(neigbor);
                 }
@@ -65,7 +52,6 @@ public class Plumber {
 
         return reachable;
     }
-
 
     public Map<Integer, List<Integer>> createInputMap(List<String> input) {
         Map<Integer, List<Integer>> map = new HashMap<>();
