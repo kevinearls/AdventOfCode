@@ -10,41 +10,39 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PlumbingTest {
     Plumber plumber;
+    List<String> exampleInput;
 
     @Before
     public void setup() {
         plumber = new Plumber();
+        exampleInput = new ArrayList<>();
+        exampleInput.add("0 <-> 2");
+        exampleInput.add("1 <-> 1");
+        exampleInput.add("2 <-> 0, 3, 4");
+        exampleInput.add("3 <-> 2, 4");
+        exampleInput.add("4 <-> 2, 3, 6");
+        exampleInput.add("5 <-> 6");
+        exampleInput.add("6 <-> 4, 5");
     }
 
-
-    /**
-     * 0 <-> 2
-     1 <-> 1
-     2 <-> 0, 3, 4
-     3 <-> 2, 4
-     4 <-> 2, 3, 6
-     5 <-> 6
-     6 <-> 4, 5
-     */
     @Test
     public void testWithExampleData() {
-        List<String> input = new ArrayList<>();
-        input.add("0 <-> 2");
-        input.add("1 <-> 1");
-        input.add("2 <-> 0, 3, 4");
-        input.add("3 <-> 2, 4");
-        input.add("4 <-> 2, 3, 6");
-        input.add("5 <-> 6");
-        input.add("6 <-> 4, 5");
-
-        Integer result = plumber.groupSize(input);
-        System.out.println("Result for test data " + result);
+        Integer result = plumber.groupSize(exampleInput);
+        System.out.println("Result for test data part 1 " + result);
         assertEquals(Integer.valueOf(6), result);
+    }
+
+    @Test
+    public void testPart2WithExampleData() {
+        Integer result = plumber.numberOfGroups(exampleInput);
+        System.out.println("Result for test data part 2" + result);
+        assertEquals(Integer.valueOf(2), result);
     }
 
     @Test
@@ -53,8 +51,19 @@ public class PlumbingTest {
         System.out.println("GOT  " + input.size() + " lines");
 
         Integer result = plumber.groupSize(input);
-        System.out.println("Result for real data " + result);
+        System.out.println("Result for real data part 1" + result);
         assertEquals(Integer.valueOf(378), result);
+    }
+
+    @Test
+    public void testPart2WithRealData() throws Exception {
+        List<String> input = loadFromFile("input.txt");
+        System.out.println("GOT  " + input.size() + " lines");
+
+        Integer result = plumber.numberOfGroups(input);
+        System.out.println("Result for real data part 2 " + result);
+        assertEquals(Integer.valueOf(204), result);
+
     }
 
     private List<String> loadFromFile(String filename) throws Exception {
@@ -72,19 +81,19 @@ public class PlumbingTest {
     }
 
 
-    //--------------- ERASE AFTER HERE --------------------------
+    @Test
+    public void testComputeReachableFrom() throws Exception {
+        Map<Integer, List<Integer>> network = plumber.createInputMap(exampleInput);
+        Set<Integer> reachable = plumber.computeReachableFrom(Integer.valueOf(0), network);
+        System.out.println(reachable);
+
+        Set<Integer> reachable2 = plumber.computeReachableFrom(Integer.valueOf(1), network);
+        System.out.println(reachable2);
+    }
+
     @Test
     public void testMap() {
-        List<String> input = new ArrayList<>();
-        input.add("0 <-> 2");
-        input.add("1 <-> 1");
-        input.add("2 <-> 0, 3, 4");
-        input.add("3 <-> 2, 4");
-        input.add("4 <-> 2, 3, 6");
-        input.add("5 <-> 6");
-        input.add("6 <-> 4, 5");
-
-        Map<Integer, List<Integer>> result = plumber.createInputMap(input);
+        Map<Integer, List<Integer>> result = plumber.createInputMap(exampleInput);
         for (Integer key : result.keySet()) {
             List<Integer> values = result.get(key);
             System.out.print(key + " <-> "  );

@@ -3,19 +3,49 @@ package com.kevinearls.adventofcode.plumber;
 import java.util.*;
 
 public class Plumber {
-    //Set<Integer> reachable = new HashSet<>();
-    // Map<Integer, List<Integer>> network = new HashMap<>();
 
     public Integer groupSize(List<String> input) {
-        Set<Integer> reachable = new HashSet<>();
         Map<Integer, List<Integer>> network = createInputMap(input);
+        Set<Integer> reachable = computeReachableFrom(0, network);
+        return reachable.size();
+    }
+
+
+    public Integer numberOfGroups(List<String> input) {
+        Map<Integer, List<Integer>> network = createInputMap(input);
+        //System.out.println("At start network has " + network.keySet().size() + " entries") ;
+
+        Integer numberOfGroups = 0;
+        boolean done = false;
+        while (!done) {
+            Integer root = network.keySet().iterator().next();
+            Set<Integer> reachable = computeReachableFrom(root, network);
+            //System.out.println("For " + root + " got a group of size " + reachable.size());
+
+            numberOfGroups++;
+            for (Integer key : reachable) {
+                network.remove(key);
+            }
+            //System.out.println("After removal network has " + network.keySet().size() + " entries"); // TODO check for 0 here?
+            if (network.keySet().size() == 0) {
+                done = true;
+            }
+
+        }
+
+
+        //Set<Integer> reachable = computeReachableFrom(0, network);
+        return numberOfGroups;
+
+    }
+
+    public Set<Integer> computeReachableFrom(Integer root, Map<Integer, List<Integer>> network) {
+        Set<Integer> reachable = new HashSet<>();
+        reachable.add(root);
         Queue<Integer> blah = new LinkedList<>();
+        boolean done = false;
+        Integer current = root;
 
-        /// Start with 0, add that to reachable
-        reachable.add(new Integer(0));
-
-        boolean done=false;
-        Integer current = 0;
         while (!done) {
             List<Integer> neighbors = network.get(current);
             boolean addedNewReachable = false;
@@ -33,7 +63,7 @@ public class Plumber {
             }
         }
 
-        return reachable.size();
+        return reachable;
     }
 
 
