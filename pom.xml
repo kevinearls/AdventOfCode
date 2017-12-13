@@ -32,6 +32,7 @@
 	<module>Knot</module>
 	<module>HexGrid</module>
 	<module>Plumber</module>
+	<module>Firewall</module>
     </modules>
 
     <dependencyManagement>
