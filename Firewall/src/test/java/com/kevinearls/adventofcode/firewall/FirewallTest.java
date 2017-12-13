@@ -101,7 +101,7 @@ public class FirewallTest {
         Layer l1 = new Layer(1, 4);
         for (int i=0; i < 10; i++) {
             l1.move();
-            logger.info("Moved to " + l1.getCurrentPosition());
+            //logger.info("Moved to " + l1.getCurrentPosition());
         }
         logger.info("Moved to " + l1.getCurrentPosition());
     }

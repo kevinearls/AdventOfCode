@@ -37,11 +37,9 @@ public class Firewall {
         for (Integer id : toCopy.layers.keySet()) {
             Layer existing = toCopy.getLayers().get(id);
             Layer newLayer = new Layer(existing.getId(), existing.getSize(), existing.getCurrentPosition(), existing.increment);
-            newLayer.setCurrentPosition(existing.getCurrentPosition());
             layers.put(id, newLayer);
         }
     }
-
 
     // For debugging
     public void printAllLayers() {
@@ -53,13 +51,6 @@ public class Firewall {
         }
     }
 
-    public void reset() {
-        for (Integer id : layers.keySet()) {
-            Layer layer = layers.get(id);
-            layer.currentPosition = 0;
-        }
-    }
-
     public Map<Integer, Layer> getLayers() {
         return layers;
     }
@@ -67,7 +58,7 @@ public class Firewall {
     public Integer getMaxLayerId() {
         return maxLayerId;
     }
-    
+
 
     public void step() {
         for (Integer id : layers.keySet()) {
