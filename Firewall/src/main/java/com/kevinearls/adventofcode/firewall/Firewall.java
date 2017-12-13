@@ -31,13 +31,32 @@ public class Firewall {
         }
     }
 
+    public Firewall(Firewall toCopy) {
+        this.maxLayerId = toCopy.maxLayerId;
+        // TODO find an easier way to do a deep copy
+        for (Integer id : toCopy.layers.keySet()) {
+            Layer existing = toCopy.getLayers().get(id);
+            Layer newLayer = new Layer(existing.getId(), existing.getSize(), existing.getCurrentPosition(), existing.increment);
+            newLayer.setCurrentPosition(existing.getCurrentPosition());
+            layers.put(id, newLayer);
+        }
+    }
+
+
     // For debugging
     public void printAllLayers() {
         logger.fine("This firewall has " + layers.keySet().size() + " layers");
         List<Integer> ids = new ArrayList<>(layers.keySet());
         Collections.sort(ids);
         for (Integer id : ids ) {
-            logger.fine(id + ": " + layers.get(id).size + " at " + layers.get(id).getCurrentPosition());
+            System.out.println("id: " + id + " size " + layers.get(id).size + " position " + layers.get(id).getCurrentPosition());
+        }
+    }
+
+    public void reset() {
+        for (Integer id : layers.keySet()) {
+            Layer layer = layers.get(id);
+            layer.currentPosition = 0;
         }
     }
 
@@ -48,16 +67,21 @@ public class Firewall {
     public Integer getMaxLayerId() {
         return maxLayerId;
     }
+    
+
+    public void step() {
+        for (Integer id : layers.keySet()) {
+            Layer layer = layers.get(id);
+            layer.move();
+        }
+    }
 
     public Integer calculateCrossingSeverity() {
         Integer severity = 0;
-        List<Integer> layerIds = new ArrayList<>(layers.keySet());
-        Collections.sort(layerIds);
 
         for (Integer picosecond = 0; picosecond <= maxLayerId; picosecond++) {
             Layer currentLayer = layers.get(picosecond);
             if (currentLayer != null ) {
-                logger.fine("At layer " + currentLayer.getId() + "  at picosecond " + picosecond);
                 if (currentLayer.getCurrentPosition() == 0) {  // this is my current position, right?
                     logger.fine("Caught at layer " + currentLayer.getId());
                     severity = severity + (currentLayer.getId() * currentLayer.getSize());
@@ -69,13 +93,26 @@ public class Firewall {
                 Layer layer = layers.get(id);
                 layer.move();
             }
-
-            //logger.fine("After layer " + currentLayer.getId());
-            //printAllLayers();
-            //logger.fine("-----------------------------------------------------------");
-
         }
 
         return severity;
+    }
+
+
+    public boolean canCross() {
+        for (Integer picosecond = 0; picosecond <= maxLayerId; picosecond++) {
+            Layer currentLayer = layers.get(picosecond);
+            if (currentLayer != null && currentLayer.getCurrentPosition() ==0) {
+                return false;
+            }
+
+            // move all layers every picosecond
+            for (Integer id : layers.keySet()) {
+                Layer layer = layers.get(id);
+                layer.move();
+            }
+        }
+
+        return true;
     }
 }

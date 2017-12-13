@@ -8,8 +8,17 @@ public class Layer {
     // DO I actually need an array?
 
     public Layer(Integer id, Integer size) {
+        //this.id = id;
+        //this.size = size;
+        this(id, size, 0, 1);
+    }
+
+
+    public Layer(Integer id, Integer size, Integer currentPosition, Integer increment) {
         this.id = id;
         this.size = size;
+        this.currentPosition = currentPosition;
+        this.increment = increment;
     }
 
     public void move() {
@@ -27,11 +36,19 @@ public class Layer {
         return currentPosition;
     }
 
+    public void setCurrentPosition(Integer currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public Integer getSize() {
         return size;
+    }
+
+    public void setIncrement(Integer increment) {
+        this.increment = increment;
     }
 }
