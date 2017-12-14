@@ -1,7 +1,11 @@
 package com.kevinearls.adventofcode.knot;
 
 
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * To achieve this, begin with a list of numbers from 0 to 255, a current position which begins at 0 (the first element
@@ -29,16 +33,54 @@ public class Knots {
      The current position moves forward by the length (1) plus the skip size (2): 4 [3] 0 1 2. The skip size increases to 3.
      The fourth length, 5, selects every element starting with the second: 4) ([3] 0 1 2. Reversing this sublist (3 0 1 2 4 into 4 2 1 0 3) produces: 3) ([4] 2 1 0.
      Finally, the current position moves forward by 8: 3 4 2 1 [0]. The skip size increases to 4.
-
-
      */
 
+
+    public String computePart2HashRedux(int[] list, String lengthsString) {
+        int[] lengthsArray = computeLengths(lengthsString);
+        System.out.println("Lengths.size: " + lengthsArray.length);
+
+        List<Integer> lengths = new ArrayList<>();
+        for (int i=0; i < lengthsArray.length; i++) {
+            lengths.add(lengthsArray[i]);
+        }
+
+        List<Integer> sparseHash = IntStream.range(0, 256)
+                .boxed()
+                .collect(Collectors.toList());
+        int current = 0, skip = 0;
+        for (int round = 0; round < 64; round++) {
+            for (int length : lengths) {
+                List<Integer> segment = new ArrayList<>();
+                for (int i = current; i < current + length; i++) {
+                    segment.add(sparseHash.get(i % sparseHash.size()));
+                }
+                Collections.reverse(segment);
+                for (int i = 0; i < segment.size(); i++) {
+                    sparseHash.set((i + current) % sparseHash.size(), segment.get(i));
+                }
+                current += length + skip++;
+            }
+        }
+
+        final int size = sparseHash.size();
+        List<String> denseHash = IntStream.range(0, (size + 15) >> 4)
+                .mapToObj(i -> sparseHash.subList(i << 4, Math.min((i + 1) << 4, size))
+                        .stream()
+                        .reduce((a, b) -> a ^ b)
+                        .orElse(0))
+                .map(i -> String.format("%02X", i).toLowerCase())
+                .collect(Collectors.toList());
+
+        return String.join("", denseHash);
+    }
 
     public String computePart2Hash(int[] list, String lengthsString) {
         int currentPosition = 0;
         int skipSize = 0;
         final int maxRounds = 64;
         int[] lengths = computeLengths(lengthsString);
+        System.out.println("Lengths.size: " + lengths.length);
 
         for (int round = 0; round < maxRounds; round++) {
             for (int i = 0; i < lengths.length; i++) {

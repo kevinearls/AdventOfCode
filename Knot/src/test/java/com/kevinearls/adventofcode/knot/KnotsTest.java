@@ -3,7 +3,7 @@ package com.kevinearls.adventofcode.knot;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class KnotsTest {
     Knots knots = new Knots();
@@ -25,25 +25,22 @@ public class KnotsTest {
         for (int i=0; i < 256; i++) {
             list[i] = i;
         }
-        assertEquals("a2582a3a0e66e6e86e3812dcb672a272", knots.computePart2Hash(list, ""));
-
-        // FIXME.  Maybe I'm reading the instructions wrong, but these tests fail, even though the real data works.
-
-        //assertEquals("33efeb34ea91902bb2f59c9920caa6cd", knots.computePart2Hash(list, "AoC 2017"));
-        //assertEquals("3efbe78a8d82f29979031a4aa0b16a9d", knots.computePart2Hash(list, "1,2,3"));
-        //assertEquals("63960835bcdc130f0b66d7ff4f6a5a8e", knots.computePart2Hash(list, "1,2,4"));
+        assertEquals("a2582a3a0e66e6e86e3812dcb672a272", knots.computePart2HashRedux(list, ""));
+        assertEquals("33efeb34ea91902bb2f59c9920caa6cd", knots.computePart2HashRedux(list, "AoC 2017"));
+        assertEquals("3efbe78a8d82f29979031a4aa0b16a9d", knots.computePart2HashRedux(list, "1,2,3"));
+        assertEquals("63960835bcdc130f0b66d7ff4f6a5a8e", knots.computePart2HashRedux(list, "1,2,4"));
 
     }
 
     @Test
-    public void testWithReadData() {
+    public void testWithRealData() {
         int[] list = new int[256];
         for (int i=0; i < 256; i++) {
             list[i] = i;
         }
         int[] day10Data = {94,84,0,79,2,27,81,1,123,93,218,23,103,255,254,243};
         String day10Part2Data = "94,84,0,79,2,27,81,1,123,93,218,23,103,255,254,243";
-        String result = knots.computePart2Hash(list, day10Part2Data);
+        String result = knots.computePart2HashRedux(list, day10Part2Data);
         System.out.println(result);
 
         assertEquals("541dc3180fd4b72881e39cf925a50253", result);
