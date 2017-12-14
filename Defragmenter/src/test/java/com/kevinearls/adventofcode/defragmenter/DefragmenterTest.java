@@ -23,11 +23,27 @@ public class DefragmenterTest {
     }
 
     @Test
+    public void testPart2WithExampleData() {
+        String testInput = "flqrgnkx";
+        Integer regions = defragmenter.calculateRegions(testInput);
+        System.out.println("Part 2 With test data got " + regions);
+        assertEquals(Integer.valueOf(1242), regions);
+    }
+
+    @Test
     public void testWithRealData() {
         String testInput = "ugkiagan";
         Integer occupiedSquares = defragmenter.calculateUsedSquares(testInput);
         System.out.println("With test data got " + occupiedSquares);
         assertEquals(Integer.valueOf(8292), occupiedSquares);
+    }
+
+    @Test
+    public void testPart2WithRealData() {
+        String testInput = "ugkiagan";
+        Integer regions = defragmenter.calculateRegions(testInput);
+        System.out.println("Part 2 With real data got " + regions);
+        assertEquals(Integer.valueOf(1069), regions);
     }
 
     // ---------------------------------------------------
