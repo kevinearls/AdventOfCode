@@ -33,6 +33,7 @@
 	<module>HexGrid</module>
 	<module>Plumber</module>
 	<module>Firewall</module>
+	<module>Defragmenter</module>
     </modules>
 
     <dependencyManagement>
