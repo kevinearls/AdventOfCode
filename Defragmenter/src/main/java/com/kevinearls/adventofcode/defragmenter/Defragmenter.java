@@ -190,11 +190,7 @@ public class Defragmenter {
                 .map(i -> String.format("%02X", i).toLowerCase())
                 .collect(Collectors.toList());
 
-        StringBuffer returnValue = new StringBuffer();
-        for (String d : denseHash) {
-            returnValue.append(d);
-        }
-        return returnValue.toString();
+        return String.join("", denseHash);
     }
 
     public List<Integer> computeLengths(String input) {
