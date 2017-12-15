@@ -34,6 +34,7 @@
 	<module>Plumber</module>
 	<module>Firewall</module>
 	<module>Defragmenter</module>
+	<module>Generator</module>
     </modules>
 
     <dependencyManagement>
