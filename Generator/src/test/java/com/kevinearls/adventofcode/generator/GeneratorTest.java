@@ -23,21 +23,6 @@ public class GeneratorTest {
     private Part1Generator generatorA;
     private Part1Generator generatorB;
 
-    @Before
-    public void setup() {
-
-    }
-
-    /**
-     * For example, suppose that for starting values, generator A uses 65, while generator B uses 8921. Then, the first five pairs of generated values are:
-
-     --Gen. A--  --Gen. B--
-     1092455   430625591
-     1181022009  1233683848
-     245556042  1431495498
-     1744312007   137874439
-     1352636452   285222916
-     */
     @Test
     public void testPart1WithExampleData() {
         generatorA = new Part1Generator(GENERATOR_A_FACTOR, 65L);
@@ -78,5 +63,40 @@ public class GeneratorTest {
         assertEquals(619, count);
     }
 
+    @Test
+    public void testPart2WithExampleData() {
+        Generator generatorA = new Generator(GENERATOR_A_FACTOR, 65L, 4L);
+        Generator generatorB = new Generator(GENERATOR_B_FACTOR, 8921L, 8L);
+
+        int count = 0;
+        for (int i=0; i < 5000000; i++) {
+            long a = generatorA.generateNextValue();
+            long b = generatorB.generateNextValue();
+
+            if ((a & 65535) == (b & 65535)) {
+                count++;
+            }
+        }
+        System.out.println("Found " + count);
+        assertEquals(309, count);
+    }
+
+    @Test
+    public void testPart2WithRealData() {
+        Generator generatorA = new Generator(GENERATOR_A_FACTOR, 591L, 4L);
+        Generator generatorB = new Generator(GENERATOR_B_FACTOR, 393L, 8L);
+
+        int count = 0;
+        for (int i=0; i < 5000000; i++) {
+            long a = generatorA.generateNextValue();
+            long b = generatorB.generateNextValue();
+
+            if ((a & 65535) == (b & 65535)) {
+                count++;
+            }
+        }
+        System.out.println("Found " + count);
+        assertEquals(290, count);
+    }
 
 }
