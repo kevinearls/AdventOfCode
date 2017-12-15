@@ -3,8 +3,6 @@ package com.kevinearls.adventofcode.generator;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.CodeSigner;
-
 import static org.junit.Assert.*;
 
 /**
@@ -22,8 +20,8 @@ import static org.junit.Assert.*;
 public class GeneratorTest {
     private static final Long GENERATOR_A_FACTOR = 16807L;
     private static final Long GENERATOR_B_FACTOR = 48271L;
-    private Generator generatorA;
-    private Generator generatorB;
+    private Part1Generator generatorA;
+    private Part1Generator generatorB;
 
     @Before
     public void setup() {
@@ -41,9 +39,9 @@ public class GeneratorTest {
      1352636452   285222916
      */
     @Test
-    public void testWithExampleData() {
-        generatorA = new Generator(GENERATOR_A_FACTOR, 65L);
-        generatorB = new Generator(GENERATOR_B_FACTOR, 8921L);
+    public void testPart1WithExampleData() {
+        generatorA = new Part1Generator(GENERATOR_A_FACTOR, 65L);
+        generatorB = new Part1Generator(GENERATOR_B_FACTOR, 8921L);
 
         int count = 0;
         for (int i=0; i < 40000000; i++) {
@@ -59,13 +57,13 @@ public class GeneratorTest {
     }
 
     /**
-     * Generator A starts with 591
-     Generator B starts with 393
+     * Part1Generator A starts with 591
+     Part1Generator B starts with 393
      */
     @Test
-    public void testWithRealData() {
-        generatorA = new Generator(GENERATOR_A_FACTOR, 591L);
-        generatorB = new Generator(GENERATOR_B_FACTOR, 393L);
+    public void testPart1WithRealData() {
+        generatorA = new Part1Generator(GENERATOR_A_FACTOR, 591L);
+        generatorB = new Part1Generator(GENERATOR_B_FACTOR, 393L);
 
         int count = 0;
         for (int i=0; i < 40000000; i++) {
@@ -77,7 +75,7 @@ public class GeneratorTest {
             }
         }
         System.out.println("Found " + count);
-        assertEquals(588, count);
+        assertEquals(619, count);
     }
 
 

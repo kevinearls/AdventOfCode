@@ -12,7 +12,7 @@ package com.kevinearls.adventofcode.generator;
  For example, suppose that for starting values, generator A uses 65, while generator B uses 8921. Then, the first five
  pairs of generated values are:
  */
-public class Generator {
+public class Part1Generator {
     Long factor;
     Long previousValue;
 
@@ -21,7 +21,7 @@ public class Generator {
      * @param factor
      * @param seed
      */
-    public Generator(Long factor, Long seed) {
+    public Part1Generator(Long factor, Long seed) {
         this.previousValue = seed;
         this.factor = factor;
     }
