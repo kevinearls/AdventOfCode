@@ -35,6 +35,7 @@
 	<module>Firewall</module>
 	<module>Defragmenter</module>
 	<module>Generator</module>
+	<module>Permutations</module>
     </modules>
 
     <dependencyManagement>
