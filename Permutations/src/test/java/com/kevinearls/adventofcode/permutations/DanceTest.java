@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * --- Day 16: Permutation Promenade ---
@@ -84,6 +84,12 @@ public class DanceTest {
         String result = exampleDance.getCurrentPrograms();
         System.out.println("With example data got results " + result);
         assertEquals("baedc", result);
+
+        // Dance a second time for part2
+        takeSteps(exampleDance, commands);
+        System.out.println("After round 2" + exampleDance.getCurrentPrograms());
+        assertEquals("ceadb", exampleDance.getCurrentPrograms());
+
     }
 
     @Test
@@ -94,13 +100,29 @@ public class DanceTest {
         /// The input is one big line, we need to split it
         List<String> input = loadFromFile("input.txt");
         String[] parts = input.get(0).split(",");
-        //System.out.println("GOt " + parts.length);
         List<String> commands = Arrays.asList(parts);
 
-        takeSteps(realDance, commands);
-        String result = realDance.getCurrentPrograms();
-        System.out.println("With read data got " + result);
-        assertEquals("lgpkniodmjacfbeh", result);
+        boolean done = false;
+        int oneBillion = 1_000_000_000;
+        List<String> outcomes = new ArrayList<>();
+        int iteration = 0;
+        // For part 2 the key is don't do this loop a billion times, but find a cycle that repeats, and
+        // then calculate which would have been the billionth.
+        while (!done && (iteration < oneBillion)) {
+            takeSteps(realDance, commands);
+            String outcome = realDance.getCurrentPrograms();
+            if (outcomes.contains(outcome)) {
+                done = true;
+            } else {
+                outcomes.add(outcome);
+                iteration++;
+            }
+        }
+
+        System.out.println("Finished after iteration " + iteration);
+        String target = outcomes.get(1000000000 % outcomes.size() - 1);
+        System.out.println("With real data got " + target);
+        assertEquals("hklecbpnjigoafmd", target);
 
     }
 

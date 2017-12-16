@@ -40,9 +40,6 @@ public class Dance {
      * @param n
      */
     public void spin(int n) {
-        if (n > programs.length) {
-            throw new RuntimeException("Got n of " + n);
-        }
         String[] newOrder = new String[programs.length];
         int position = n;
         for (int i=0; i < programs.length; i++) {
@@ -77,12 +74,15 @@ public class Dance {
      * @param nameB
      */
     public void partner(String nameA, String nameB) {
-        int positionA=0, positionB=0;
+        int positionA=-1, positionB=-1;
         for (int i=0; i < programs.length; i++) {
             if(programs[i].equals(nameA))  {
                 positionA = i;
             } else if (programs[i].equals(nameB)) {
                 positionB = i;
+            }
+            if ((positionA !=-1) && (positionB != -1)) {
+                break;
             }
         }
         exchange(positionA, positionB);
