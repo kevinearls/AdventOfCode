@@ -120,7 +120,7 @@ public class DanceTest {
         }
 
         System.out.println("Finished after iteration " + iteration);
-        String target = outcomes.get(1000000000 % outcomes.size() - 1);
+        String target = outcomes.get(oneBillion % outcomes.size() - 1);
         System.out.println("With real data got " + target);
         assertEquals("hklecbpnjigoafmd", target);
 
