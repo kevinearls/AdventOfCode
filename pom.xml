@@ -36,6 +36,7 @@
 	<module>Defragmenter</module>
 	<module>Generator</module>
 	<module>Permutations</module>
+	<module>Spinlock</module>
     </modules>
 
     <dependencyManagement>
