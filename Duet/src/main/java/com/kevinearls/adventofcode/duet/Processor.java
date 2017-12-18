@@ -1,15 +1,19 @@
 package com.kevinearls.adventofcode.duet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Processor {
+    private Integer id;
     private Map<String, Long> registers = new HashMap<>();
     private List<Instruction> instructions = new ArrayList<>();
+    private Processor neighbor;
+    private Queue<Long> messageQueue = new LinkedList<>();
+    private Integer messagesSent = 0;
+    int position = 0;  // current instruction
+    boolean stopped = false;
 
-    public Processor(List<String> input) {
+    public Processor(Integer id, List<String> input) {
+        this.id = id;
         for (String line : input) {
             String[] parts = line.split("\\s+");
             Instruction instruction;
@@ -20,72 +24,71 @@ public class Processor {
             }
             instructions.add(instruction);
         }
-        //System.out.println("Got " + instructions.size() + " instructions");
-
         for (char c = 'a'; c <= 'z'; c++) {
             registers.put("" + c, 0L);
         }
 
+        // Each program also has its own program ID (one 0 and the other 1); the register p should begin with this value.
+        registers.put("p", Long.valueOf(id));
+    }
+
+    public Integer getMessagesSent() {
+        return messagesSent;
+    }
+
+    public void setNeighbor(Processor neighbor) {
+        this.neighbor = neighbor;
+    }
+
+    public boolean isAlive() {
+        if (!stopped && !isBlocked()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    // We're blocked if the queue is empty and the next instruction is rcv
+    private Boolean isBlocked() {
+        return messageQueue.isEmpty() && instructions.get(position).getCommand().equals("rcv");
+    }
+
+    public void sendToQueue(final Long value) {
+        messageQueue.add(value);
     }
 
     /**
-     * Is this when we're done?
-     *
-     * What is the value of the recovered frequency (the value of the most recently played sound) the first time a
-     * rcv instruction is executed with a non-zero value?
-     *
-     * snd X plays a sound with a frequency equal to the value of X.
-     set X Y sets register X to the value of Y.
-     add X Y increases register X by the value of Y.
-     mul X Y sets register X to the result of multiplying the value contained in register X by the value of Y.
-     mod X Y sets register X to the remainder of dividing the value contained in register X by the value of Y (that is,
-         it sets X to the result of X modulo Y).
-     rcv X recovers the frequency of the last sound played, but only when the value of X is not zero. (If it is zero, the command does nothing.)
-     jgz X Y jumps with an offset of the value of Y, but only if the value of X is greater than zero.
-     (An offset of 2 skips the next instruction, an offset of -1 jumps to the previous instruction, and so on.)
-     *
-     *
-     * Continuing (or jumping) off either end of the program terminates it.
-
 
      */
-    public Long process() {
-        int position = 0;
-        boolean stopping = false;
-        Long lastSoundPlayed = -1L;
-
-
-        while (!stopping) {
+    public void processTillBlockedOrDone() {
+        while (!stopped && !isBlocked()) {
             Instruction instruction = instructions.get(position);
             String command = instruction.getCommand();
             String p1 = instruction.getP1();
             String p2 = instruction.getP2();
 
             //System.out.println("Instruction "  + instruction + " ; position " + position);
-            switch(command) {
-                case "snd" :
-                    lastSoundPlayed = snd(p1);
+            switch (command) {
+                case "snd":
+                    snd(p1);
                     break;
-                case "set" :
+                case "set":
                     set(p1, p2);
                     break;
-                case "add" :
+                case "add":
                     add(p1, p2);
                     break;
-                case "mul" :
+                case "mul":
                     mul(p1, p2);
                     break;
-                case "mod" :
+                case "mod":
                     mod(p1, p2);
                     break;
-                case "rcv" :
-                    Long value = registers.get(p1);
-                    if (value != 0) {
-                        System.out.println(">>>>>>>>>>>> Before return registers has " + registers.size() + " entries");
-                        return lastSoundPlayed;
-                    }
+                case "rcv":
+                    registers.put(p1, messageQueue.remove());
                     break;
-                case "jgz" :
+                case "jgz":
                     position = jump(p1, p2, position);
                     break;
                 default:
@@ -96,13 +99,10 @@ public class Processor {
             }
 
             // Continuing (or jumping) off either end of the program terminates it.
-            if (position < 0 ||  position >= instructions.size()) {
-                stopping = true;
+            if (position < 0 || position >= instructions.size()) {
+                stopped = true;
             }
         }
-
-
-        return lastSoundPlayed;
     }
 
     /**
@@ -169,19 +169,8 @@ public class Processor {
         }
     }
 
-    public Long snd(String register) {
-        System.out.println(">>>>> Setting lastSound to register " + register + " value " + registers.get(register));
-        Long lastSound = registers.get(register);  // TODO what if not found?
-        return  lastSound;
+    public void snd(String register) {
+        messagesSent++;
+        neighbor.sendToQueue(getValue(register));
     }
-
-
-    private boolean isRegister(final String input) {
-        if (Character.isLetter(input.charAt(0))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }
