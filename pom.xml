@@ -37,6 +37,7 @@
 	<module>Generator</module>
 	<module>Permutations</module>
 	<module>Spinlock</module>
+	<module>Duet</module>
     </modules>
 
     <dependencyManagement>
