@@ -38,6 +38,7 @@
 	<module>Permutations</module>
 	<module>Spinlock</module>
 	<module>Duet</module>
+	<module>Tubes</module>
     </modules>
 
     <dependencyManagement>
