@@ -39,6 +39,7 @@
 	<module>Spinlock</module>
 	<module>Duet</module>
 	<module>Tubes</module>
+	<module>Particles</module>
     </modules>
 
     <dependencyManagement>
