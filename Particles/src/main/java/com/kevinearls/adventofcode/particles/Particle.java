@@ -6,6 +6,7 @@ public class Particle {
     Acceleration acceleration;
     Velocity velocity;
     private Integer id;
+    private boolean isRemoved = false;
 
 
     public Particle(Integer id, String line) {
@@ -87,6 +88,14 @@ Increase the Z position by the Z velocity.
 
     public Integer getId() {
         return id;
+    }
+
+    public boolean isRemoved() {
+        return isRemoved;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
     }
 
     @Override
