@@ -12,10 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.kevinearls.adventofcode.virus.NodeState.*;
 import static org.junit.Assert.assertEquals;
 
 public class VirusTest {
-    Map<Location, Boolean> grid = new HashMap<>();
+    Map<Location, NodeState> grid = new HashMap<>();
 
     @Before
     public void setup() {
@@ -29,9 +30,8 @@ public class VirusTest {
         input.add("#..");
         input.add("...");
 
-        Integer result = countBursts(input, 70);
-        System.out.println("Saw " + result + " bursts");
-        assertEquals(Integer.valueOf(41), result);
+        Integer result = countBursts(input, 100);  // 100 iterations should return 26
+        assertEquals(Integer.valueOf(26), result);
     }
 
     @Test
@@ -41,10 +41,9 @@ public class VirusTest {
         input.add("#..");
         input.add("...");
 
-        Integer result = countBursts(input, 10000);
+        Integer result = countBursts(input, 10000000);
         System.out.println("Saw " + result + " bursts");
-        assertEquals(Integer.valueOf(5587), result);
-        //printGrid();
+        assertEquals(Integer.valueOf(2511944), result);
     }
 
 
@@ -53,24 +52,18 @@ public class VirusTest {
         List<String> input = loadFromFile("input.txt");
         System.out.println("Got " + input.size() + " input lines");
 
-        Integer result = countBursts(input, 10000);
-        System.out.println("Saw " + result + " bursts");
-        assertEquals(Integer.valueOf(5587), result);  // 5243 is too low  5456 is too high
+        Integer result = countBursts(input, 10000000);
+        System.out.println("Real data Saw " + result + " bursts");
+        assertEquals(Integer.valueOf(2511424), result);  // 2511944 is too high
     }
 
-    @Test
-    public void stupid() {
-        List<String> input = new ArrayList<>();
-        input.add("..#");
-        input.add("#..");
-        input.add("...");
-
-        int startRow = input.size() / 2;
-        int startColumn = input.get(0).length() / 2;
-
-        System.out.println("Start row " + startColumn + " start column " + startColumn);
-    }
-
+    /**
+     * FIXME Clean up this horrible mess!!!!!
+     * @param input
+     * @param bursts
+     * @return
+     * @throws Exception
+     */
     public Integer countBursts(List<String> input, Integer bursts) throws Exception {
         int startRow = input.size() / 2;
         int startColumn = input.get(0).length() / 2;
@@ -84,68 +77,112 @@ public class VirusTest {
         //
         // The virus carrier is on a clean node, so it turns left, infects the node, and moves left:
         //
-        String direction ="up";
+        String direction = "up";
         String turning = "";
         Integer infectedCount = 0;
         int row = startRow;
         int column = startColumn;
-        for (int i=0; i < bursts; i++) {
+        for (int i = 0; i < bursts; i++) {
             Location currentLocation = new Location(row, column);
-            //System.out.println(currentLocation);
-            Boolean infected = grid.get(currentLocation);
-            if (infected == null) {
-                infected = false;
-                grid.put(currentLocation, infected); // not yet?
-            }
-            if (infected) {
-                grid.put(currentLocation, false);
-                turning = "right";
-            } else {
-                grid.put(currentLocation, true);
-                infectedCount++;
-                turning = "left";
+            NodeState state = grid.get(currentLocation);
+            if (state == null) {
+                state = CLEAN;
+                grid.put(currentLocation, state); // not yet?
             }
 
-            switch (direction) {  // TODO combine cases where possible
-                case "up":
-                    if (turning.equals("left")) {
-                        column--;
-                        direction = "left";
-                    } else {
-                        column++;
-                        direction = "right";
-                    }
-                    break;
-                case "down":
-                    if (turning.equals("left")) {
-                        column++;
-                        direction = "right";
-                    } else {
-                        column--;
-                        direction = "left";
-                    }
-                    break;
-                case "left":
-                    if (turning.equals("left")) {
-                        row++;
-                        direction = "down";
-                    } else {
+            // FIXME there must be a simler way
+            if (state == CLEAN || state == INFECTED) {
+                if (state == CLEAN) {
+                    state = WEAKENED;
+                    turning = "left";
+                } else {
+                    state = FLAGGED;
+                    turning = "right";
+                }
+                switch (direction) {
+                    case "up":
+                        if (turning.equals("left")) {
+                            column--;
+                            direction = "left";
+                        } else {
+                            column++;
+                            direction = "right";
+                        }
+                        break;
+                    case "down":
+                        if (turning.equals("left")) {
+                            column++;
+                            direction = "right";
+                        } else {
+                            column--;
+                            direction = "left";
+                        }
+                        break;
+                    case "left":
+                        if (turning.equals("left")) {
+                            row++;
+                            direction = "down";
+                        } else {
+                            row--;
+                            direction = "up";
+                        }
+                        break;
+                    case "right":
+                        if (turning.equals("left")) {
+                            row--;
+                            direction = "up";
+                        } else {
+                            row++;
+                            direction = "down";
+                        }
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown direction " + direction);
+                }
+            } else if (state == WEAKENED) {
+                state = INFECTED;
+                infectedCount++;
+                // Keep moving in the same direction
+                switch (direction) { 
+                    case "up":
                         row--;
-                        direction = "up";
-                    }
-                    break;
-                case "right":
-                    if (turning.equals("left")) {
-                        row--;
-                        direction = "up";
-                    } else {
+                        break;
+                    case "down":
                         row++;
-                        direction = "down";
-                    }
-                    break;
-                default:
-                    throw new RuntimeException("Unknown direction " + direction);
+                        break;
+                    case "left":
+                        column--;
+                        break;
+                    case "right":
+                        column++;
+                        break;
+                    default:
+                        throw new RuntimeException("Weakened can't handle direction " + direction);
+                }
+            } else {  // for FLAGGED
+                state = CLEAN;
+                switch (direction) {  // Reverse direction
+                    case "up":
+                        direction="down";
+                        row++;
+                        break;
+                    case "down":
+                        direction="up";
+                        row--;
+                        break;
+                    case "left":
+                        direction="right";
+                        column++;
+                        break;
+                    case "right":
+                        direction = "left";
+                        column--;
+                        break;
+                    default:
+                        throw new RuntimeException("Weakened can't handle direction " + direction);
+                }
             }
+            grid.put(currentLocation, state);
         }
 
         return infectedCount;
@@ -157,11 +194,11 @@ public class VirusTest {
             for (int column = 0; column < line.length(); column++) {
                 // Clean nodes are shown as .; infected nodes are shown as #.
                 Location location = new Location(row, column);
-                Boolean infected = false;
+                NodeState initialState = CLEAN;
                 if (line.charAt(column) == '#') {
-                    infected = true;
+                    initialState = INFECTED;
                 }
-                grid.put(location, infected);
+                grid.put(location, initialState);
 
             }
             row++;
@@ -171,10 +208,6 @@ public class VirusTest {
     private void printGrid() {
         System.out.println("----------------------------------------");
         List<Location> locations = new ArrayList<>(grid.keySet());
-        for (Location l : locations) {
-            System.out.println(l);
-        }
-        System.out.println("-------------------------------------------");
 
         int minRow = Integer.MAX_VALUE;
         int minColumn = Integer.MAX_VALUE;
@@ -194,20 +227,22 @@ public class VirusTest {
             }
         }
 
-        System.out.println("Got " + locations.size() + " locations");
-        System.out.println("Rows " + minRow + " to " + maxRow + " columns " + minColumn + " to " + maxColumn);
-
         for (int r = minRow; r <= maxRow; r++) {  // TODO need to keep track of min max row, or get
             for (int c = minColumn; c <= maxColumn; c++) {
-                Boolean infected = grid.get(new Location(r, c));
-                if (infected == null || !infected) {
+                NodeState state = grid.get(new Location(r, c));
+                if (state == null || state == CLEAN) {
                     System.out.print(".");
-                } else {
+                } else if (state == WEAKENED){
+                    System.out.print("W");
+                } else if (state == INFECTED){
                     System.out.print("#");
+                } else if (state == FLAGGED){
+                    System.out.print("F");
                 }
             }
             System.out.println();
         }
+        System.out.println("----------------------------------------");
     }
 
     private List<String> loadFromFile(String filename) throws Exception {
