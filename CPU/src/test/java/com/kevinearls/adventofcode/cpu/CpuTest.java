@@ -54,12 +54,13 @@ public class CpuTest {
      */
     @Test
     public void testExampleData() {
-        List<String> input = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
-        input.add("b inc 5 if a > 1");
-        input.add("a inc 1 if b < 5");
-        input.add("c dec -10 if a >= 1");
-        input.add("c inc -20 if c == 10");
+        List<String> input = List.of(
+                "b inc 5 if a > 1",
+                "a inc 1 if b < 5",
+                "c dec -10 if a >= 1",
+                "c inc -20 if c == 10"
+        );
 
         // First pass, parse data and load all registers
         for (String s : input) {
@@ -69,7 +70,7 @@ public class CpuTest {
         }
 
         for (Instruction instruction : instructions) {
-           instruction.evaluateAndApply(cpu);
+            instruction.evaluateAndApply(cpu);
         }
 
         Integer result = cpu.findGreatestRegisterValue();

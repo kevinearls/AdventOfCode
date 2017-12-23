@@ -20,10 +20,12 @@ public class FirewallTest {
 
     @Before
     public void setup() {
-        exampleInput.add("0: 3");
-        exampleInput.add("1: 2");
-        exampleInput.add("4: 4");
-        exampleInput.add("6: 4");
+        exampleInput = List.of (
+                "0: 3",
+                "1: 2",
+                "4: 4",
+                "6: 4"
+        );
     }
 
     private Firewall createExampleFirewall() {

@@ -28,9 +28,10 @@ public class ParticlesTest {
 
     @Test
     public void testPart1WithExampleData() {
-        List<String> input = new ArrayList<>();
-        input.add("p=<3,0,0>, v=<2,0,0>, a=<-1,0,0>");
-        input.add("p=<4,0,0>, v=<0,0,0>, a=<-2,0,0>");
+        List<String> input = List.of(
+                "p=<3,0,0>, v=<2,0,0>, a=<-1,0,0>",
+                "p=<4,0,0>, v=<0,0,0>, a=<-2,0,0>"
+        );
 
         List<Particle> particles = new ArrayList<>();
         Integer id=0;

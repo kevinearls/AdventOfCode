@@ -73,10 +73,11 @@ public class DanceTest {
     public void testWithExampleData() throws Exception {
         String programs = "abcde";
         //programs = "eabcd"; // TODO remove
-        List<String> commands = new ArrayList<>();
-        commands.add("s1");
-        commands.add("x3/4");
-        commands.add("pe/b");
+        List<String> commands = List.of(
+                "s1",
+                "x3/4",
+                "pe/b"
+        );
 
         Dance exampleDance = new Dance(programs);
         takeSteps(exampleDance, commands);

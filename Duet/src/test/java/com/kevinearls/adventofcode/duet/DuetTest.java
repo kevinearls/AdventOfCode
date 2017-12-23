@@ -37,17 +37,18 @@ public class DuetTest {
     @Ignore
     @Test
     public void testPart1WithExampleData() {
-        List<String> input = new ArrayList<>();
-        input.add("set a 1");
-        input.add("add a 2");
-        input.add("mul a a");
-        input.add("mod a 5");
-        input.add("snd a");
-        input.add("set a 0");
-        input.add("rcv a");
-        input.add("jgz a -1");
-        input.add("set a 1");
-        input.add("jgz a -2");
+        List<String> input = List.of(
+        "set a 1",
+        "add a 2",
+        "mul a a",
+        "mod a 5",
+        "snd a",
+        "set a 0",
+        "rcv a",
+        "jgz a -1",
+        "set a 1",
+        "jgz a -2"
+        );
 
         Processor p = new Processor(0, input);
         //Long lastSoundPlayed = p.processTillBlockedOrDone();
@@ -66,14 +67,15 @@ public class DuetTest {
      */
     @Test
     public void testPart2WithExampleData() {
-        List<String> input = new ArrayList<>();
-        input.add("snd 1");
-        input.add("snd 2");
-        input.add("snd p");
-        input.add("rcv a");
-        input.add("rcv b");
-        input.add("rcv c");
-        input.add("rcv d");
+        List<String> input = List.of(
+                "snd 1",
+                "snd 2",
+                "snd p",
+                "rcv a",
+                "rcv b",
+                "rcv c",
+                "rcv d"
+        );
 
         Processor p0 = new Processor(0, input);
         Processor p1 = new Processor(1, input);

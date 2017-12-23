@@ -21,14 +21,15 @@ public class PlumbingTest {
     @Before
     public void setup() {
         plumber = new Plumber();
-        exampleInput = new ArrayList<>();
-        exampleInput.add("0 <-> 2");
-        exampleInput.add("1 <-> 1");
-        exampleInput.add("2 <-> 0, 3, 4");
-        exampleInput.add("3 <-> 2, 4");
-        exampleInput.add("4 <-> 2, 3, 6");
-        exampleInput.add("5 <-> 6");
-        exampleInput.add("6 <-> 4, 5");
+        exampleInput = List.of(
+                "0 <-> 2",
+                "1 <-> 1",
+                "2 <-> 0, 3, 4",
+                "3 <-> 2, 4",
+                "4 <-> 2, 3, 6",
+                "5 <-> 6",
+                "6 <-> 4, 5"
+        );
     }
 
     @Test

@@ -25,10 +25,7 @@ public class VirusTest {
 
     @Test
     public void testExampleDataSmall() throws Exception {
-        List<String> input = new ArrayList<>();
-        input.add("..#");
-        input.add("#..");
-        input.add("...");
+        List<String> input = List.of("..#", "#..", "...");
 
         Integer result = countBursts(input, 100);  // 100 iterations should return 26
         assertEquals(Integer.valueOf(26), result);
@@ -36,10 +33,7 @@ public class VirusTest {
 
     @Test
     public void testExampleDataBig() throws Exception {
-        List<String> input = new ArrayList<>();
-        input.add("..#");
-        input.add("#..");
-        input.add("...");
+        List<String> input = List.of("..#", "#..", "...");
 
         Integer result = countBursts(input, 10000000);
         System.out.println("Saw " + result + " bursts");
@@ -143,7 +137,7 @@ public class VirusTest {
                 state = INFECTED;
                 infectedCount++;
                 // Keep moving in the same direction
-                switch (direction) { 
+                switch (direction) {
                     case "up":
                         row--;
                         break;

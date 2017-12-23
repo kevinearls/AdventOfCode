@@ -24,13 +24,14 @@ public class TubesTest {
      */
     @Test
     public void testPart1WithExampleData() {
-        List<String> input = new ArrayList<>();
-        input.add("    |         ");
-        input.add("    |  +--+   ");
-        input.add("    A  |  C   ");
-        input.add("F---|----E|--+");
-        input.add("    |  |  |  D");
-        input.add("    +B-+  +--+");
+        List<String> input = List.of(
+                "    |         ",
+                "    |  +--+   ",
+                "    A  |  C   ",
+                "F---|----E|--+",
+                "    |  |  |  D",
+                "    +B-+  +--+"
+        );
 
         Tubes tubes = new Tubes(input);
         tubes.printMap();
@@ -44,9 +45,7 @@ public class TubesTest {
     @Test
     public void testPart1WithRealData() throws Exception {
         List<String> input = loadFromFile("input.txt");
-        //input.remove(0); // HACK as for some reason this line keeps getting clobbered
         Tubes tubes = new Tubes(input);
-        //tubes.printMap();
         List<String> lettersSeen = tubes.follow();
         String result = String.join("", lettersSeen);
         System.out.println("Letters Seen: " + result);

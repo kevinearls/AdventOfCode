@@ -40,20 +40,21 @@ public class TowerTest {
      */
     @Test
     public void testExampleData() {
-        List<String> exampleData = new ArrayList<>();
-        exampleData.add("pbga (66)");
-        exampleData.add("xhth (57)");
-        exampleData.add("ebii (61)");
-        exampleData.add("havc (66)");
-        exampleData.add("ktlj (57)");
-        exampleData.add("fwft (72) -> ktlj, cntj, xhth");
-        exampleData.add("qoyq (66)");
-        exampleData.add("padx (45) -> pbga, havc, qoyq");
-        exampleData.add("tknk (41) -> ugml, padx, fwft");
-        exampleData.add("jptl (61)");
-        exampleData.add("ugml (68) -> gyxo, ebii, jptl");
-        exampleData.add("gyxo (61)");
-        exampleData.add("cntj (57)");
+        List<String> exampleData = List.of(
+        "pbga (66)",
+        "xhth (57)",
+        "ebii (61)",
+        "havc (66)",
+        "ktlj (57)",
+        "fwft (72) -> ktlj, cntj, xhth",
+        "qoyq (66)",
+        "padx (45) -> pbga, havc, qoyq",
+        "tknk (41) -> ugml, padx, fwft",
+        "jptl (61)",
+        "ugml (68) -> gyxo, ebii, jptl",
+        "gyxo (61)",
+        "cntj (57)"
+        );
 
         for (String example : exampleData) {
             InputLine line = new InputLine(example);
