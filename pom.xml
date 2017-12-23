@@ -41,6 +41,7 @@
 	<module>Tubes</module>
 	<module>Particles</module>
 	<module>Virus</module>
+	<module>Coprocessor</module>
     </modules>
 
     <dependencyManagement>
