@@ -31,6 +31,16 @@ public class BridgeTest {
     }
 
     @Test
+    public void testPart2WithExampleData() {
+        List<Component> components = loadExampleData();
+        System.out.println("Got " + components.size());
+
+        Integer strongest = getStrongestLongest(components);
+        System.out.println("Strongest " + strongest);
+        assertEquals(Integer.valueOf(19) , strongest);
+    }
+
+    @Test
     public void testPart1WithRealData() throws Exception {
         List<String> input = loadFromFile("input.txt");
         List<Component> components = createComponentList(input);
@@ -38,6 +48,17 @@ public class BridgeTest {
         Integer strongest = getStrongest(components);
         System.out.println("Strongest " + strongest);
         assertEquals(Integer.valueOf(1695) , strongest);
+    }
+
+
+    @Test
+    public void testPart2WithRealData() throws Exception {
+        List<String> input = loadFromFile("input.txt");
+        List<Component> components = createComponentList(input);
+
+        Integer strongest = getStrongestLongest(components);
+        System.out.println("Strongest " + strongest);
+        assertEquals(Integer.valueOf(1673) , strongest);
     }
 
     public Integer getStrongest(List<Component> components) {
@@ -54,6 +75,37 @@ public class BridgeTest {
                 strongest = strength;
             }
         }
+        return strongest;
+    }
+
+    public Integer getStrongestLongest(List<Component> components) {
+        Integer strongest = Integer.MIN_VALUE;
+        Integer longest = Integer.MIN_VALUE;
+
+        List<List<Component>> bridges = createBridges(0, components);
+        // pass 1, find longest
+        for (List<Component> bridge : bridges) {
+            if (bridge.size() > longest) {
+                longest = bridge.size();
+            }
+        }
+        System.out.println("Out of " + bridges.size() + " the longest is " + longest);
+        int used = 0;
+        for (List<Component> bridge : bridges) {
+            if (bridge.size() == longest) {
+                used++;
+                int strength = 0;
+                for (Component c : bridge) {
+                    strength += c.getPortA() + c.getPortB();
+                }
+                if (strength > strongest) {
+                    strongest = strength;
+                }
+            }
+        }
+
+        System.out.println("Found " + used + " bridges of size " + longest);
+
         return strongest;
     }
 
