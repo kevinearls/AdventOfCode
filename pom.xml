@@ -42,6 +42,7 @@
 	<module>Particles</module>
 	<module>Virus</module>
 	<module>Coprocessor</module>
+	<module>Bridge</module>
     </modules>
 
     <dependencyManagement>

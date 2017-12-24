@@ -6,9 +6,18 @@ import java.util.Map;
 public class Coprocessor {
     private Map<String, Long> registers = new HashMap<>();
     private Integer multiplyExecuted = 0;
+    private Boolean debugMode;
 
     public Coprocessor() {
-        registers.put("a", 0L);
+        this(false);
+    }
+
+    public Coprocessor(Boolean debugMode) {
+        if (debugMode) {
+            registers.put("a", 1L);
+        } else {
+            registers.put("a", 0L);
+        }
         registers.put("b", 0L);
         registers.put("c", 0L);
         registers.put("d", 0L);
@@ -34,6 +43,11 @@ public class Coprocessor {
     public void sub(String register, String value) {
         Long startValue = registers.get(register);
         Long toSubtract = getValue(value);
+
+        if (register.equals("h")) {
+            System.out.println("After subtract h will be " + (startValue - toSubtract));
+        }
+
         registers.put(register, startValue - toSubtract);
     }
 

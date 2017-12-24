@@ -20,7 +20,6 @@ public class CpuTest {
         cpu = new CPU();
     }
 
-
     /**
      * You receive a signal directly from the CPU. Because of your recent assistance with jump instructions, it would
      * like you to compute the result of a series of unusual register instructions.
