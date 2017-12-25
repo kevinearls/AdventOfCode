@@ -43,6 +43,7 @@
 	<module>Virus</module>
 	<module>Coprocessor</module>
 	<module>Bridge</module>
+	<module>Turing</module>
     </modules>
 
     <dependencyManagement>
