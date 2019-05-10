@@ -8,8 +8,8 @@ pipeline {
             steps {
                 sh '''
                     #env | sort
-                    git clone https://github.com/kevinearls/AdventOfCode.git
-                    mvn --fail-never clean test
+                    checkout scm
+                     mvn --fail-never clean test
 
                     find . -name "TEST*.xml"
                 '''
