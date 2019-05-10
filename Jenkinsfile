@@ -6,9 +6,9 @@ pipeline {
     stages {
         stage('Build'){
             steps {
+                checkout scm
                 sh '''
                     #env | sort
-                    checkout scm
                      mvn --fail-never clean test
 
                     find . -name "TEST*.xml"
